@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Classification Model</title>
+    <style>
+        /* Previous styles remain the same */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            text-align: center;
+            background-color: #2d2d2d;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            text-align: center;
+            color: #8fcf91;
+            font-size: 2rem;
+            margin: 0;
+        }
+        header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #viewCodeBtn {
+        position:absolute;
+        right: 70px;
+        background-color: #4f9698;
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s;
+    }
+
+    #viewCodeBtn:hover {
+        background-color: #45a049;
+    }
+        main {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            padding: 2rem;
+            background-color: #2d2d2d;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* New styles for sample images section */
+        .sample-images {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: #3d3d3d;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .sample-images h2 {
+            color: #4CAF50;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .sample-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .sample-btn {
+            background-color: #2d2d2d;
+            color: #fff;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sample-btn:hover {
+            background-color: #4CAF50;
+            transform: translateY(-2px);
+        }
+
+        .sample-btn img {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Previous styles continue */
+        .upload-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        input[type="file"] {
+            background-color: #3d3d3d;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 2px dashed #4CAF50;
+            cursor: pointer;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 2rem;
+        }
+
+        #result img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .classification-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #3d3d3d;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        footer {
+            background-color: #2d2d2d;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            main {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            button {
+                padding: 0.8rem 1.5rem;
+            }
+
+            .sample-buttons {
+                flex-direction: column;
+            }
+
+            .sample-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.2rem;
+            }
+
+            .container {
+                padding: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>AI Image Classification System</h1>
+        <button id="viewCodeBtn">📜 View Code</button>
+    </header>
+
+    <main>
+        <div class="container">
+            <!-- New sample images section -->
+            <div class="sample-images">
+                <h2>Download Sample Images</h2>
+                <div class="sample-buttons">
+                    <button class="sample-btn" onclick="downloadSample('apple')">
+                        🍎 Apple Sample
+                    </button>
+                    <button class="sample-btn" onclick="downloadSample('banana')">
+                        🍌 Banana Sample
+                    </button>
+                    <button class="sample-btn" onclick="downloadSample('orange')">
+                        🍊 Orange Sample
+                    </button>
+
+                </div>
+            </div>
+
+            <div class="upload-section">
+                <input type="file" id="imageUpload" accept="image/*">
+                <button id="classifyBtn">Classify Image</button>
+            </div>
+            <div id="result">
+                <img id="uploadedImage" src="" alt="Uploaded Image" style="display:none;">
+                <div class="classification-info">
+                    <p id="classificationResult"></p>
+                    <p id="accuracy"></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Image Classification System. All rights reserved.</p>
+    </footer>
+
+    <script>
+
+document.getElementById('viewCodeBtn').addEventListener('click', () => {
+        const confirmOpen = confirm("Do you want to open the GitHub repository for this project?");
+        if (confirmOpen) {
+            window.open("https://github.com/mayurdhoble/fruit_classification/", "_blank");
+        }
+    });
+        // Sample images download function
+        function downloadSample(fruit) {
+            const sampleImages = {
+                'apple': "http://127.0.0.1:5000/C:\Users\dell\OneDrive\Pictures\images\apple.jfif",
+                'banana': "http://127.0.0.1:5000/C:\Users\dell\OneDrive\Pictures\images\banana.jfif",
+                'orange': "http://127.0.0.1:5000/C:\Users\dell\OneDrive\Pictures\images\orange.jfif"
+            };
+     
+
+
+
+            // Create a fetch request to get the image
+            fetch(sampleImages[fruit])
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `${fruit}_sample.jpg`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(error => {
+                    console.error('Error downloading sample:', error);
+                    alert('Error downloading sample image. Please try again.');
+                });
+        }
+
+        document.getElementById('classifyBtn').addEventListener('click', () => {
+            const fileInput = document.getElementById('imageUpload');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('uploadedImage').src = e.target.result;
+                    document.getElementById('uploadedImage').style.display = 'block';
+
+                    // Send image to backend
+                    fetch('/classify', {
+                        method: 'POST',
+                        body: JSON.stringify({ image: e.target.result }),
+                        headers: { 'Content-Type': 'application/json' }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('classificationResult').textContent = 'Fruit In Image is ' + data.label;
+                        document.getElementById('accuracy').textContent = 'With accuracy of : ' + data.accuracy + '%';
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.getElementById('classificationResult').textContent = 'Error classifying image';
+                    });
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please upload an image file.');
+            }
+        });
+
+    </script>
+</body>
+</html>
